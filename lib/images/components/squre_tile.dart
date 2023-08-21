@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 
 class SquereTile extends StatelessWidget {
@@ -15,7 +17,8 @@ class SquereTile extends StatelessWidget {
       child: Image.asset(
         imagePath,
         height: 40,
-      ),
+      ),  
     );
   }
 }
+  

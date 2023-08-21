@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:login_ui/images/components/my_button.dart';
 import 'package:login_ui/images/components/squre_tile.dart';
@@ -9,11 +10,16 @@ class LoginPage extends StatelessWidget {
   LoginPage({super.key});
 
 //textfeilds
-  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
 //signuserin
-  void signUsrIn() {}
+  void signUsrIn() async {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: emailController.text,
+      password: passwordController.text,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +47,8 @@ class LoginPage extends StatelessWidget {
 
             //test feild
             MyTextFeild(
-              controller: usernameController,
-              hintText: 'Username',
+              controller: emailController,
+              hintText: 'Email',
               obscureText: false,
             ),
 
@@ -115,7 +121,7 @@ class LoginPage extends StatelessWidget {
               children: const [
                 SquereTile(imagePath: 'lib/images/google.png'),
                 SizedBox(width: 10),
-                SquereTile(imagePath: 'lib/images/google.png')
+                SquereTile(imagePath: 'lib/images/apple.png')
               ],
             ),
 

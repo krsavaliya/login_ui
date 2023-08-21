@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, avoid_web_libraries_in_flutter, prefer_const_constructors_in_immutables, use_build_context_synchronously
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,19 +6,64 @@ import 'package:login_ui/images/components/my_button.dart';
 import 'package:login_ui/images/components/squre_tile.dart';
 import 'package:login_ui/images/components/textfeild.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   LoginPage({super.key});
 
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
 //textfeilds
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
 //signuserin
   void signUsrIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text,
-      password: passwordController.text,
-    );
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(child: CircularProgressIndicator());
+        });
+
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: emailController.text,
+        password: passwordController.text,
+      );
+      //pop circle progress
+      Navigator.pop(context);
+    } on FirebaseAuthException catch (e) {
+      //pop circle progress
+      Navigator.pop(context);
+      if (e.email == "user-not-found") {
+        //show error messege
+        wrongEmailMessege();
+      } else if (e.email == "wrong-password") {
+        //show error messege
+        wrongEmailMessege();
+      }
+    }
+  }
+
+  void wrongEmailMessege() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            title: Text('Wrong Email'),
+          );
+        });
+  }
+
+  void wrongPasswordMessege() {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return const AlertDialog(
+            title: Text('Wrong Password'),
+          );
+        });
   }
 
   @override

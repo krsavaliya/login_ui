@@ -6,24 +6,25 @@ import 'package:login_ui/images/components/my_button.dart';
 import 'package:login_ui/images/components/squre_tile.dart';
 import 'package:login_ui/images/components/textfeild.dart';
 
-class LoginPage extends StatefulWidget {
+class RegisterPage extends StatefulWidget {
   final Function()? onTap;
-  LoginPage({
+  RegisterPage({
     super.key,
     required this.onTap,
   });
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<RegisterPage> createState() => _RegisterPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisterPageState extends State<RegisterPage> {
 //textfeilds
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
 
 //signuserin
-  void signUsrIn() async {
+  void signUsrUp() async {
     showDialog(
         context: context,
         builder: (context) {
@@ -31,10 +32,15 @@ class _LoginPageState extends State<LoginPage> {
         });
 
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
-      );
+      //check confirm? == password
+      if (passwordController.text == confirmPasswordController.text) {
+        await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text,
+          password: passwordController.text,
+        );
+      } else {
+        showErrorMessage("Passwords don't match");
+      }
       //pop circle progress
       Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
@@ -73,13 +79,13 @@ class _LoginPageState extends State<LoginPage> {
                 Column(mainAxisAlignment: MainAxisAlignment.center, children: [
               const SizedBox(height: 50),
               //logo
-              const Icon(Icons.lock, size: 100),
+              const Icon(Icons.lock, size: 50),
 
-              const SizedBox(height: 50),
+              const SizedBox(height: 35),
 
-              //welcome
+              //lets create account
               Text(
-                'Welcome back',
+                'Lets create your account',
                 style: TextStyle(
                   color: Colors.grey[700],
                   fontSize: 16,
@@ -106,26 +112,19 @@ class _LoginPageState extends State<LoginPage> {
 
               const SizedBox(height: 10),
 
-              //forgot password
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      'Forgot Password',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
+              //confirm password
+              MyTextFeild(
+                controller: confirmPasswordController,
+                hintText: ' Confirm Password',
+                obscureText: true,
               ),
 
-              const SizedBox(height: 25),
+              const SizedBox(height: 35),
 
               //button
               MyButton(
-                text: 'Sign In',
-                onTap: signUsrIn,
+                text: 'Sign Up',
+                onTap: signUsrUp,
               ),
 
               const SizedBox(height: 50),
@@ -175,14 +174,14 @@ class _LoginPageState extends State<LoginPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'not a member',
+                    'Alredy a member',
                     style: TextStyle(color: Colors.grey[700]),
                   ),
                   const SizedBox(width: 4),
                   GestureDetector(
                     onTap: widget.onTap,
                     child: const Text(
-                      'RegisterNow',
+                      'Login Now',
                       style: TextStyle(
                         color: Colors.blue,
                         fontWeight: FontWeight.bold,
